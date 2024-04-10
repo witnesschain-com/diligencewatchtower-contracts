@@ -1,45 +1,32 @@
-## Smart Contract Setup (ONLY FOR DEVELOPERS)
-Security for optimistic rollups (ORs) is derived from dispute resolution at L1 for suspicious transactions. The first line of defense is offered by parties who first identify suspicious transactions. Currently deployed ORs rely on relatively centralized (and trusted) entities who offer this line of defense; e.g., Arbitrum’s state assertion can only be disputed by a set of 12 whitelisted defensive validator nodes.
+# Witness Chain Diligence Watchtowers
+Diligence watchtowers are the first line of defense for optimistic rollups. They enable incentive compatible and crypto-economically-secure Proof-of-Diligence (PoD) to make sure watchtowers are working in the happy path for optimistic rollups. 
 
-The surge in demand for app-specific rollups and platforms to support them (e.g., Base and Eigenlayer) results from increasing value and diversity of transactions relying on L2s. In turn, there is a need for decentralized and trust-free validators who diligently raise the alarm when they detect a suspicious transaction. Witness Chain Watchtowers provide the first line of defense for rollups, which is:
-- Trust-free: provides Proof of Diligence of watchtowers with Ethereum trust (through EigenLayer)
-- Decentralized: provides a Proof of Location for verifying the geo-location of watchtowers and enforcing desired physical decentralization.
-- Programmable: provides SLA smart contracts to scale the number/stake of watchtowers and their decentralization properties with the value of vulnerable transactions.
+# Why Watchtowers?
 
-### Getting Started
+Optimistic rollups attain their hyper scaling by validating the transactions on another chain and post the transaction data publicly for anyone to view. If faulty transactions are detected, the Ethereum validators can be engaged for arbitration using a fraud proof. Thus, the current premise operates under the assumption that when a fault is detected, validators initiate fraud proofs, engaging in a dispute resolution process. However, the existing incentive system only comes into play after a fault has been identified. 
 
-#### Prerequisites
-Setting up Witness Chain smart contracts involves several prerequisites. Here's a 
-list to help you get started:
+But who will look for these faulty transaction consistently ? How will these players be incentivized to be diligently carrying out this task when nothing is going wrong? 
 
-- Install [`Foundry`](https://book.getfoundry.sh/)
-- Install [`Anvil`](https://book.getfoundry.sh/anvil/)
+Witness Chain Watchtower protocol is answer to these problems. 
 
-#### Steps
+It is a programmable, trust-free, and decentralized watchtower service that uses an innovative proof of diligence to incentivize the watchtowers in normal path.
 
-1. git clone this repository
-```
-git clone https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower.git
-```
+# Basics
 
-2. Fork goerli on a local anvil chain with EL contracts.
-```
-anvil --fork-url https://goerli.gateway.tenderly.co
-```
+If you would like to understand more about the watchtower protocol and it's basics, please follow this [guide](https://docs.witnesschain.com/diligence-watchtowers/watchtower-protocol-version-2)
 
-3. In a separate terminal, run
+If you are a node operator and want to quickly get started, you can refer to the 
+- [Node operator guide](https://docs.witnesschain.com/diligence-watchtowers/for-the-node-operators/watchtower-setup/mainnet-setup)
 
 ```
-export RPC_URL=http://localhost:8545
-export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-export AGGREGATOR=0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 // Aggregator is the ETH Address of the Private Key
-export CHAIN_ID=5
-make test
+The code base is primarily shared to assist you in thoroughly exploring the smart contracts, enabling you to comprehend their interactions with both the watchtower client and EigenLayer contracts.
 ```
-All the above tests should pass
 
-### Current Mainnet Deployment
+# Deployments
+## Mainnet Deployment
+The present deployment on the mainnet marks our initial release. Below, you can find the addresses of the deployed contracts.
 
+### Smart Contracts
 | Name | Solidity | Proxy | Implementation | 
 | -------- | -------- | -------- | -------- | 
 | OperatorRegistry | [`OperatorRegistry`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/OperatorRegistry.sol) | [`0xEf1...85D`](https://etherscan.io/address/0xEf1a89841fd189ba28e780A977ca70eb1A5e985D) | [`0xa90...B76`](https://etherscan.io/address/0xa90a9E4EE979b5705a8DB8FC113Dd5DDedC5EB76) | 
@@ -47,7 +34,16 @@ All the above tests should pass
 | WitnessHub | [`WitnessHub`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/WitnessHub.sol) | [`0xD25...cC7`](https://etherscan.io/address/0xD25c2c5802198CB8541987b73A8db4c9BCaE5cC7) | [`0xe1F...7bD`](https://etherscan.io/address/0xe1F108D5d2337987F818E8b2E61D2E0E36cbF7bD) | 
 | AlertManager | [`AlertManager`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/AlertManager.sol) | [`0xD1b...2eE`](https://etherscan.io/address/0xD1b991530D07f03226b0192E0161E1142d3552eE) | [`0xFF1...376`](https://etherscan.io/address/0xFF1F6c0d2afcb4A22e52FeA08D5A7cc0a1c49376) | 
 
-### Current HoleSky Deployment
+### MultiSig
+
+| Name | Address | Implementation | 
+| -------- | -------- |  -------- | 
+| Admin Multisig | [`0xec6...0f3`](https://etherscan.io/address/0xec6D5f54dC69EBed2379470303B706491E9E80f3) | [`0xd9b...552`](https://etherscan.io/address/0xd9db270c1b5e3bd161e8c8503c55ceabee709552)| 
+
+## HoleSky Deployment
+The current deployment on the testnet is on Holesky. Below, you can see the addresses of the deployed contracts
+
+### Smart Contracts
 | Name | Solidity | Proxy | Implementation | 
 | -------- | -------- | -------- | -------- | 
 | OperatorRegistry | [`OperatorRegistry`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/OperatorRegistry.sol) | [`0xEf1...85D`](https://holesky.etherscan.io/address/0xEf1a89841fd189ba28e780A977ca70eb1A5e985D) | [`0xa90...B76`](https://holesky.etherscan.io/address/0xa90a9E4EE979b5705a8DB8FC113Dd5DDedC5EB76) | 
