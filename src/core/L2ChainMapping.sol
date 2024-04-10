@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-import {L2OutputOracle} from "@optimism/packages/contracts-bedrock/contracts/L1/L2OutputOracle.sol";
-import {IL2ChainMapping} from "./../interfaces/IL2ChainMapping.sol";
+import { L2OutputOracle } from "@optimism/packages/contracts-bedrock/contracts/L1/L2OutputOracle.sol";
+import { IL2ChainMapping } from "./../interfaces/IL2ChainMapping.sol";
 /**
  * @title  L2ChainMapping
  * @author Witness Chain
  * @notice This contract is used for holding the mappings for the L2OO contract on different testnet chains
  */
-
 contract L2ChainMapping is IL2ChainMapping {
     // address for L2 Output Oracle for Optimism on Mainnet (L1);
     address public immutable MainnetL2OOAddressOptimism;
@@ -27,7 +26,7 @@ contract L2ChainMapping is IL2ChainMapping {
 
     /**
      * @dev Constructor to set L2OutputOracle addresses during deployment.
-     */
+    */
     constructor(
         address _mainnetL2OOAddressOptimism,
         address _mainnetL2OOAddressBase,
@@ -35,7 +34,8 @@ contract L2ChainMapping is IL2ChainMapping {
         address _goerliL2OOAddressBase,
         address _sepoliaL2OOAddressOptimism,
         address _sepoliaL2OOAddressBase
-    ) {
+    )
+    {
         MainnetL2OOAddressOptimism = _mainnetL2OOAddressOptimism;
         MainnetL2OOAddressBase = _mainnetL2OOAddressBase;
         GoerliL2OOAddressOptimism = _goerliL2OOAddressOptimism;
@@ -50,46 +50,32 @@ contract L2ChainMapping is IL2ChainMapping {
      * @return A boolean indicating whether the chain ID is valid.
      */
     function isValidChainID(uint256 _chainID) external pure returns (bool) {
-        return _chainID == 10 || _chainID == 8453 || _chainID == 420 || _chainID == 84531 || _chainID == 11155420
+        return
+            _chainID == 10
+            || _chainID == 8453
+            || _chainID == 420
+            || _chainID == 84531
+            || _chainID == 11155420
             || _chainID == 84532;
     }
-
-    // function getValidChainIDs() external pure returns (uint256[] memory) {
-    //     uint256[] memory validChaindIDs = new uint256[](6);
-
-    //     validChaindIDs[0] = 10;
-    //     validChaindIDs[1] = 8453;
-    //     validChaindIDs[2] = 420;
-    //     validChaindIDs[3] = 85431;
-    //     validChaindIDs[4] = 11155420;
-    //     validChaindIDs[5] = 84532;
-
-    //     return validChaindIDs;
-    // }
 
     /**
      * @dev Gets the latest block number for the specified chain ID.
      * @param _chainID The chain ID to get the latest block number for.
      * @return The latest block number.
      */
-    function getLatestBlockNumber(uint256 _chainID) public view returns (uint256) {
-        if (_chainID == 10) {
-            // 10 ChainID is Optimism Mainnet
+    function getLatestBlockNumber(uint256 _chainID) public view returns(uint256) {
+        if (_chainID == 10) {               // 10 ChainID is Optimism Mainnet
             return L2OutputOracle(MainnetL2OOAddressOptimism).latestBlockNumber();
-        } else if (_chainID == 8453) {
-            // 8453 ChainID is Base Mainnet
+        } else if (_chainID == 8453) {      // 8453 ChainID is Base Mainnet
             return L2OutputOracle(MainnetL2OOAddressBase).latestBlockNumber();
-        } else if (_chainID == 420) {
-            // 420 ChainID is Optimism Goerli
+        } else if (_chainID == 420) {       // 420 ChainID is Optimism Goerli
             return L2OutputOracle(GoerliL2OOAddressOptimism).latestBlockNumber();
-        } else if (_chainID == 84531) {
-            // 84531 ChainID is Base Goerli
+        } else if (_chainID == 84531) {     // 84531 ChainID is Base Goerli
             return L2OutputOracle(GoerliL2OOAddressBase).latestBlockNumber();
-        } else if (_chainID == 11155420) {
-            // 11155420 ChainID is Optimism Sepolia
+        } else if (_chainID == 11155420) {  // 11155420 ChainID is Optimism Sepolia
             return L2OutputOracle(SepoliaL2OOAddressOptimism).latestBlockNumber();
-        } else if (_chainID == 84532) {
-            // 84532 ChainID is Base Sepolia
+        } else if (_chainID == 84532) {     // 84532 ChainID is Base Sepolia
             return L2OutputOracle(SepoliaL2OOAddressBase).latestBlockNumber();
         } else {
             // This should not happen due to the isValidChainID check.
