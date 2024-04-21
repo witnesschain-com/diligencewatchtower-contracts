@@ -1,0 +1,7 @@
+#Foundry files
+broadcast/
+.vscode/
+cache/
+out/
+
+*.DS_Store

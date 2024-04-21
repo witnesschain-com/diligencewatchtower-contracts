@@ -29,10 +29,10 @@ The present deployment on the mainnet marks our initial release. Below, you can 
 ### Smart Contracts
 | Name | Solidity | Proxy | Implementation | 
 | -------- | -------- | -------- | -------- | 
-| OperatorRegistry | [`OperatorRegistry`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/OperatorRegistry.sol) | [`0xEf1...85D`](https://etherscan.io/address/0xEf1a89841fd189ba28e780A977ca70eb1A5e985D) | [`0xa90...B76`](https://etherscan.io/address/0xa90a9E4EE979b5705a8DB8FC113Dd5DDedC5EB76) | 
-| L2ChainMapping | [`L2ChainMapping`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/L2ChainMapping.sol) | | [`0x20b...2A4`](https://etherscan.io/address/0x20b8aE105526182fF18d4b4934D340dd061c52A4) | 
-| WitnessHub | [`WitnessHub`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/WitnessHub.sol) | [`0xD25...cC7`](https://etherscan.io/address/0xD25c2c5802198CB8541987b73A8db4c9BCaE5cC7) | [`0xe1F...7bD`](https://etherscan.io/address/0xe1F108D5d2337987F818E8b2E61D2E0E36cbF7bD) | 
-| AlertManager | [`AlertManager`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/AlertManager.sol) | [`0xD1b...2eE`](https://etherscan.io/address/0xD1b991530D07f03226b0192E0161E1142d3552eE) | [`0xFF1...376`](https://etherscan.io/address/0xFF1F6c0d2afcb4A22e52FeA08D5A7cc0a1c49376) | 
+| OperatorRegistry | [`OperatorRegistry`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/OperatorRegistry.sol) | [`0xEf1...85D`](https://etherscan.io/address/0xEf1a89841fd189ba28e780A977ca70eb1A5e985D) | [`0xa90...B76`](https://etherscan.io/address/0xa90a9E4EE979b5705a8DB8FC113Dd5DDedC5EB76) | 
+| L2ChainMapping | [`L2ChainMapping`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/L2ChainMapping.sol) | | [`0x20b...2A4`](https://etherscan.io/address/0x20b8aE105526182fF18d4b4934D340dd061c52A4) | 
+| WitnessHub | [`WitnessHub`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/WitnessHub.sol) | [`0xD25...cC7`](https://etherscan.io/address/0xD25c2c5802198CB8541987b73A8db4c9BCaE5cC7) | [`0xe1F...7bD`](https://etherscan.io/address/0xe1F108D5d2337987F818E8b2E61D2E0E36cbF7bD) | 
+| AlertManager | [`AlertManager`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/AlertManager.sol) | [`0xD1b...2eE`](https://etherscan.io/address/0xD1b991530D07f03226b0192E0161E1142d3552eE) | [`0xFF1...376`](https://etherscan.io/address/0xFF1F6c0d2afcb4A22e52FeA08D5A7cc0a1c49376) | 
 
 ### MultiSig
 
@@ -46,7 +46,40 @@ The current deployment on the testnet is on Holesky. Below, you can see the addr
 ### Smart Contracts
 | Name | Solidity | Proxy | Implementation | 
 | -------- | -------- | -------- | -------- | 
-| OperatorRegistry | [`OperatorRegistry`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/OperatorRegistry.sol) | [`0xEf1...85D`](https://holesky.etherscan.io/address/0xEf1a89841fd189ba28e780A977ca70eb1A5e985D) | [`0xa90...B76`](https://holesky.etherscan.io/address/0xa90a9E4EE979b5705a8DB8FC113Dd5DDedC5EB76) | 
-| L2ChainMapping | [`L2ChainMapping`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/L2ChainMapping.sol) | | [`0x20b...2A4`](https://holesky.etherscan.io/address/0x20b8aE105526182fF18d4b4934D340dd061c52A4) | 
-| WitnessHub | [`WitnessHub`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/WitnessHub.sol) | [`0xD25...cC7`](https://holesky.etherscan.io/address/0xD25c2c5802198CB8541987b73A8db4c9BCaE5cC7) | [`0xe1F...7bD`](https://holesky.etherscan.io/address/0xe1F108D5d2337987F818E8b2E61D2E0E36cbF7bD) | 
-| AlertManager | [`AlertManager`](https://github.com/kaleidoscope-blockchain/eigenlayer-avs-watchtower/blob/development/src/smart_contracts/src/core/AlertManager.sol) | [`0xc69...88a`](https://holesky.etherscan.io/address/0xc697aF7aF3C8c5Ce614d8BC0F252377233D9588a) | [`0x7f8...98B`](https://holesky.etherscan.io/address/0x7f8D15ee84e4E8F04e29fe00c64820FBB086298B) | 
+| OperatorRegistry | [`OperatorRegistry`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/OperatorRegistry.sol) | [`0x708...Def`](https://holesky.etherscan.io/address/0x708CBDDdab358c1fa8efB82c75bB4a116F316Def) | [`0xF82...7D3`](https://holesky.etherscan.io/address/0xF824D48eeb6759Ec9A6AC7E5bdDA68f11764E7D3) | 
+| L2ChainMapping | [`L2ChainMapping`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/L2ChainMapping.sol) | | [`0x67f...3eC`](https://holesky.etherscan.io/address/0x67f1e47Cfc0d10C87fF6C3616C02AD5E241B13eC) | 
+| WitnessHub | [`WitnessHub`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/WitnessHub.sol) | [`0xa98...87D`](https://holesky.etherscan.io/address/0xa987EC494b13b21A8a124F8Ac03c9F530648C87D) | [`0xe8a...968`](https://holesky.etherscan.io/address/0xe8a3C4E7701028A9fab27e468a1BE5a8161EC968) | 
+| AlertManager | [`AlertManager`](https://github.com/witnesschain-com/diligencewatchtower-contracts/blob/main/src/core/AlertManager.sol) | [`0xc69...88a`](https://holesky.etherscan.io/address/0xc697aF7aF3C8c5Ce614d8BC0F252377233D9588a) | [`0x7f8...98B`](https://holesky.etherscan.io/address/0x7f8D15ee84e4E8F04e29fe00c64820FBB086298B) | 
+
+# Building and Running Tests
+## Prerequisites
+Setting up Witness Chain smart contracts involves several prerequisites. Here's a list to help you get started:
+
+- Install [`Foundry`](https://book.getfoundry.sh/)
+- Install [`Anvil`](https://book.getfoundry.sh/anvil/)
+
+## Steps
+
+### Clone this repository
+
+```
+git clone https://github.com/witnesschain-com/diligencewatchtower-contracts.git
+```
+
+### Fork goerli on a local anvil chain with EL contracts
+```
+anvil --fork-url https://goerli.gateway.tenderly.co
+```
+
+### In a separate terminal, run
+```
+export RPC_URL=http://localhost:8545
+export PRIVATE_KEY=0x... <PRIVATE_KEY>
+export AGGREGATOR=<Eth Address associated with the Private Key>
+export CHAIN_ID=5
+export CHAIN_ENV=devnet
+make test
+```
+
+If the above tests PASS, Congratulations !!!! The contracts are deployed on your local chain.
+

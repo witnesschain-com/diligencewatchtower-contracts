@@ -1,0 +1,9 @@
+{
+  "addresses": {
+    "OperatorRegistry": "0xEB0F983d5411100c1180C5CF91646c81fDD77033",
+    "OperatorRegistryProxy": "0x11dbfa16074d1D3485e66800c321cf31ABacbEb3",
+    "l2ChainMapping": "0xd78001BB9B70E8bFF27800fc1d877b4D29459C13",
+    "DiligenceProofManager": "0x09d7a1e26b120c9b50b9232deebf37d502911142",
+    "DiligenceProofManagerProxy": "0x0FD3c8114CF6291E3EF684758A7211011A819832"
+  }
+}
