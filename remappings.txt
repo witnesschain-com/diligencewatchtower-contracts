@@ -1,0 +1,7 @@
+eigenlayer-contracts/=lib/eigenlayer-contracts/
+eigenlayer-middleware/=lib/eigenlayer-middleware
+@openzeppelin-upgrades/=lib/openzeppelin-contracts-upgradeable/
+@openzeppelin/=lib/openzeppelin-contracts/
+ds-test/=lib/eigenlayer-contracts/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+@optimism/=lib/optimism/
