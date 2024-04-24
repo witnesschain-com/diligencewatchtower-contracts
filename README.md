@@ -68,17 +68,23 @@ git clone https://github.com/witnesschain-com/diligencewatchtower-contracts.git
 
 ### Fork goerli on a local anvil chain with EL contracts
 ```
-anvil --fork-url https://goerli.gateway.tenderly.co
+anvil --fork-url https://eth.llamarpc.com
 ```
 
 ### In a separate terminal, run
 ```
-export RPC_URL=http://localhost:8545
-export PRIVATE_KEY=0x... <PRIVATE_KEY>
-export AGGREGATOR=<Eth Address associated with the Private Key>
-export CHAIN_ID=5
-export CHAIN_ENV=devnet
+cp .env.example .env
+```
+
+In .env, change the config parameters for PRIVATE_KEY and AGGREGATOR
+
+After saving .env, run 
+
+```
+source .env
+
 make test
+
 ```
 
 If the above tests PASS, Congratulations !!!! The contracts are deployed on your local chain.

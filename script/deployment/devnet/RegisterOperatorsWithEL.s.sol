@@ -9,7 +9,7 @@ import { OperatorRegistry } from "../../../src/core/OperatorRegistry.sol";
 import { IDelegationManager } from "eigenlayer-contracts/src/contracts/interfaces/IDelegationManager.sol";
 
 /** To deploy and verify DeployWatchtower contracts
- *  forge script ./script/deployment/RegisterOperatorsWithEL.s.sol:RegisterOperatorsWithEL --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast 
+ *  forge script ./script/deployment/devnet/RegisterOperatorsWithEL.s.sol:RegisterOperatorsWithEL --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast 
  */
 
 contract RegisterOperatorsWithEL is Script {
@@ -38,17 +38,19 @@ contract RegisterOperatorsWithEL is Script {
         uint256 ECDSAPrivateKey,
         address ECDSAAddress
     ) internal {
-        IDelegationManager.OperatorDetails memory operatorDetails = IDelegationManager.OperatorDetails({
+            console.log("Calling registerOperatorWithEigenlayer");
+            IDelegationManager.OperatorDetails memory operatorDetails = IDelegationManager.OperatorDetails({
                 earningsReceiver: ECDSAAddress,
-                delegationApprover: address(0),
+                delegationApprover: ECDSAAddress,
                 stakerOptOutWindowBlocks: 0
             });
-            string memory emptyStringForMetadataURI;
+            string memory emptyStringForMetadataURI = "testing";
+            
             IDelegationManager(delegationManager).registerAsOperator(
                     operatorDetails,
                     emptyStringForMetadataURI
-                ); 
-            }
+                );
+            } 
 
     function run() public {
 
@@ -59,7 +61,7 @@ contract RegisterOperatorsWithEL is Script {
  */
   string memory configData = readOutput("deployment_output");
 
-  // Test Operators in EL Goerli Anvil
+  // Test Operators
   operatorsListPrivateKey[0] = 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97;
   operatorsListPrivateKey[1] = 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6;
   operatorsListPrivateKey[2] = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;

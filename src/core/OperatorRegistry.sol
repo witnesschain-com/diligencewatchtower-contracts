@@ -49,6 +49,7 @@ contract OperatorRegistry is
     // watchtower address => operator address
     mapping(address => address) watchtowerToOperator;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
@@ -274,5 +275,14 @@ contract OperatorRegistry is
     /// @notice Sets the Slasher Address
     function setSlasherAddress(address _slasherAddress) external whenNotPaused onlyOwner {
         slasherAddress = _slasherAddress;
+    }
+    /// @notice pause the contract
+    function pause() public whenNotPaused onlyOwner {
+        super._pause();
+    }
+
+    /// @notice unpause the contract
+    function unpause() public whenPaused onlyOwner {
+        super._unpause();
     }
 }
