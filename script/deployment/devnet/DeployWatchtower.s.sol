@@ -18,7 +18,7 @@ import {IAVSDirectory} from "eigenlayer-contracts/src/contracts/interfaces/IAVSD
 
 /**
  * To deploy and verify DeployWatchtower contracts
- *  forge script ./script/deployment/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --verifier-url https://api.etherscan.io/api\? --etherscan-api-key $ETHERSCAN_API_KEY ;
+ *  forge script ./script/deployment/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast;
  */
 contract DeployWatchtower is Script {
     event log_named_uint(string key, uint256 val);

@@ -3,5 +3,13 @@ broadcast/
 .vscode/
 cache/
 out/
+.env
 
 *.DS_Store
+
+node_modules/
+lib/
+artifacts/
+.openzeppelin/
+verify-or.ts
+typechain-types/
