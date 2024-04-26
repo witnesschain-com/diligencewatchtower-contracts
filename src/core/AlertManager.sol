@@ -110,7 +110,6 @@ contract AlertManager is IAlertManager, Initializable, OwnableUpgradeable, Pausa
         uint256 _l2BlockNumber
     )
         external
-        whenNotPaused
         view
         returns (Alert[] memory alerts)
     {
