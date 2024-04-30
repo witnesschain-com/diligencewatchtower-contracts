@@ -32,6 +32,10 @@ module.exports = {
   },
   settings: {
     evmVersion: "london",
+    "optimizer": {
+      "runs": 200,
+      "enabled": true,
+    }
   },
   paths: { sources:"./src",
   tests:"./test",

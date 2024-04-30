@@ -27,14 +27,16 @@ contract DeployL2Watchtower is Script {
     event log_named_uint(string key, uint256 val);
 
     function writeOutput(string memory outputJson, string memory outputFileName) internal {
-        string memory outputDir = string.concat(vm.projectRoot(), "/script/deployment/output/");
+        string memory chainEnv = vm.envString("CHAIN_ENV");
+        string memory outputDir = string.concat(vm.projectRoot(), "/script/deployment/",chainEnv,"/input/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory outputFilePath = string.concat(outputDir, chainDir, outputFileName, ".json");
         vm.writeJson(outputJson, outputFilePath);
     }
 
     function readInput(string memory outputFileName) internal view returns (string memory) {
-        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/input/");
+        string memory chainEnv = vm.envString("CHAIN_ENV");
+        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/",chainEnv,"/input/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));

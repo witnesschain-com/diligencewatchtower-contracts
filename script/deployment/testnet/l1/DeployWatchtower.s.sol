@@ -14,21 +14,25 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 import {IAVSDirectory} from "eigenlayer-contracts/src/contracts/interfaces/IAVSDirectory.sol";
 
 /**
- * To deploy and verify DeployWatchtower contracts
+ *  To deploy and verify DeployWatchtower contracts
+ *  For testnet,
+ *  forge script ./script/deployment/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY ;
+ *  For mainnet
  *  forge script ./script/deployment/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --verifier-url https://api.etherscan.io/api\? --etherscan-api-key $ETHERSCAN_API_KEY ;
  */
 contract DeployWatchtower is Script {
-    event log_named_uint(string key, uint256 val);
+    event LogNamedUint(string key, uint256 val);
 
-    function writeOutput(string memory outputJson, string memory outputFileName) internal {
+    function _writeOutput(string memory outputJson, string memory outputFileName) internal {
         string memory outputDir = string.concat(vm.projectRoot(), "/script/deployment/output/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory outputFilePath = string.concat(outputDir, chainDir, outputFileName, ".json");
         vm.writeJson(outputJson, outputFilePath);
     }
 
-    function readInput(string memory outputFileName) internal view returns (string memory) {
-        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/input/");
+    function _readInput(string memory outputFileName) internal view returns (string memory) {
+        string memory chainEnv = vm.envString("CHAIN_ENV");
+        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/",chainEnv,"/input/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));
@@ -36,7 +40,7 @@ contract DeployWatchtower is Script {
 
     function run() public {
         uint256 chainId = block.chainid;
-        emit log_named_uint("You are deploying on ChainID", chainId);
+        emit LogNamedUint("You are deploying on ChainID", chainId);
 
         // Record transactions for deployment
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
@@ -44,7 +48,7 @@ contract DeployWatchtower is Script {
         //address avsDirectory = vm.envAddress("AVS_DIRECTORY");
         vm.startBroadcast(deployerPrivateKey);
 
-        string memory configData = readInput("addresses_input");
+        string memory configData = _readInput("addresses_input");
 
         // Addresses used during initialization
         address mainnetL2OOAddressOptimism = address(stdJson.readAddress(configData, ".addresses.MainnetL2OOOptimism"));
@@ -102,23 +106,23 @@ contract DeployWatchtower is Script {
         console.log("WitnessHub Address:", witnessHubAddress);
         console.log("WitnessHub Proxy Address:", address(witnessHubProxy));
 
-        string memory parent_object = "parent object";
+        string memory parentObject = "parent object";
 
-        string memory deployed_addresses = "addresses";
+        string memory deployedAddresses = "addresses";
 
-        vm.serializeAddress(deployed_addresses, "OperatorRegistry", address(operatorRegistryImplementation));
+        vm.serializeAddress(deployedAddresses, "OperatorRegistry", address(operatorRegistryImplementation));
 
-        vm.serializeAddress(deployed_addresses, "OperatorRegistryProxy", address(operatorRegistryProxy));
+        vm.serializeAddress(deployedAddresses, "OperatorRegistryProxy", address(operatorRegistryProxy));
 
-        vm.serializeAddress(deployed_addresses, "WitnessHub", witnessHubAddress);
+        vm.serializeAddress(deployedAddresses, "WitnessHub", witnessHubAddress);
 
-        vm.serializeAddress(deployed_addresses, "WitnessHubProxy", address(witnessHubProxy));
+        vm.serializeAddress(deployedAddresses, "WitnessHubProxy", address(witnessHubProxy));
 
-        string memory deployed_addresses_output =
-            vm.serializeAddress(deployed_addresses, "l2ChainMapping", address(l2ChainMapping));
+        string memory deployedAddressesOutput =
+            vm.serializeAddress(deployedAddresses, "l2ChainMapping", address(l2ChainMapping));
 
-        string memory finalJson = vm.serializeString(parent_object, deployed_addresses, deployed_addresses_output);
+        string memory finalJson = vm.serializeString(parentObject, deployedAddresses, deployedAddressesOutput);
 
-        writeOutput(finalJson, "deployment_output");
+        _writeOutput(finalJson, "deployment_output");
     }
 }
