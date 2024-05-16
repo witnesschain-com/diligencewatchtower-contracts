@@ -1,4 +1,4 @@
-// npx hardhat run script/deployment/testnet/l2/deploy-proxy-DiligenceProofManager.js --network witnesschain-testnet                     
+// npx hardhat run script/deployment/testnet/l2/deploy-proxy-DiligenceProofManager.js --network blue-orangutan
 const { ethers, upgrades } = require("hardhat");
 var CONTRACT_ADDR_CONFIG = require('./../output/1237146866/deployment_output.json');
 
