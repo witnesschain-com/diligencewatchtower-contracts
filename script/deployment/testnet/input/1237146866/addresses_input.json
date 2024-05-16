@@ -1,0 +1,13 @@
+{
+  "addresses": {
+    "DelegationManager" : "0xA44151489861Fe9e3055d95adC98FbD462B948e7",
+    "Slasher" : "0xcAe751b75833ef09627549868A04E32679386e7C",
+    "MainnetL2OOOptimism" : "0xdfe97868233d1aa22e815a266982f2cf17685a27",
+    "MainnetL2OOBase" : "0x56315b90c40730925ec5485cf004d835058518A0",
+    "GoerliL2OOOptimism" : "0xE6Dfba0953616Bacab0c9A8ecb3a9BBa77FC15c0",
+    "GoerliL2OOBase" : "0x2A35891ff30313CcFa6CE88dcf3858bb075A2298",
+    "SepoliaL2OOOptimism" : "0x90E9c4f8a994a250F6aEfd61CAFb4F2e895D458F",
+    "SepoliaL2OOBase" : "0x84457ca9D0163FbC4bbfe4Dfbb20ba46e48DF254",
+    "AVSDirectory" : "0x055733000064333CaDDbC92763c58BF0192fFeBf"
+  }
+}

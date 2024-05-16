@@ -13,3 +13,4 @@ artifacts/
 .openzeppelin/
 verify-or.ts
 typechain-types/
+src/.DS_Store

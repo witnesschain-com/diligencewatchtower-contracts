@@ -32,21 +32,38 @@ module.exports = {
   },
   settings: {
     evmVersion: "london",
+    "optimizer": {
+      "runs": 200,
+      "enabled": true,
+    }
   },
   paths: { sources:"./src",
   tests:"./test",
 },
   networks: {
+    "witnesschain-op": {
+      url: "http://65.2.30.76:8545",
+      chainId: 42069,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+      
+    },
     "witnesschain-testnet": {
       url: "https://witnesschain-testnet-rpc.eu-north-2.gateway.fm",
       chainId: 250628747,
       accounts: [`${process.env.PRIVATE_KEY}`],
       
+    },
+    "blue-orangutan": {
+      url: "https://blue-orangutan-rpc.eu-north-2.gateway.fm",
+      chainId: 1237146866,
+      accounts: [`${process.env.PRIVATE_KEY}`],
     }
   },
   etherscan: {
     apiKey: {
       "witnesschain-testnet": process.env.ETHERSCAN_API_KEY,
+      "witnesschain-op": process.env.ETHERSCAN_API_KEY,
+      "blue-orangutan": process.env.ETHERSCAN_API_KEY
     },
     customChains: [
       {
@@ -57,6 +74,14 @@ module.exports = {
           browserURL: "https://witnesschain-testnet-blockscout.eu-north-2.gateway.fm",
         },
       },
+      {
+        network: "blue-orangutan",
+        chainId: 1237146866,
+        urls: {
+          apiURL: "https://blue-orangutan-blockscout.eu-north-2.gateway.fm/api/",
+          browserURL: "https://blue-orangutan-blockscout.eu-north-2.gateway.fm",
+        },
+      }
     ],
   }
 };

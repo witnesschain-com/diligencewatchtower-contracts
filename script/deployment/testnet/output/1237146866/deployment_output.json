@@ -1,0 +1,11 @@
+{
+  "addresses": {
+    "OperatorRegistry": "0x739ff1de5f47826C38f4419e08ea08C6D7707F19",
+    "OperatorRegistryProxy": "0x26710e60A36Ace8A44e1C3D7B33dc8B80eAb6cb7",
+    "l2ChainMapping": "0xB30A899F194780a91101F7B4854640CC23AA1312",
+    "DiligenceProofManager": "0x0Cccb5A0511Ded6B98f4729c753394f7D1405572",
+    "DiligenceProofManagerProxy": "0x7AB3b14F3177935d4539d80289906633615393F2",
+    "AlertManager":"0x2414916fE4777E4cCDDc6C69C49327A1ca97C11f",
+    "AlertManagerProxy":"0xF9696529cB591E0EA9f08BBB5908Ae4a342a1F14"
+  }
+}

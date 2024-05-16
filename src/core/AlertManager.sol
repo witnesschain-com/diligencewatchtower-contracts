@@ -30,6 +30,7 @@ contract AlertManager is IAlertManager, Initializable, OwnableUpgradeable, Pausa
     // chainID => block number => list of alerts raised
     mapping(uint256 => mapping(uint256 => Alert[])) public alertsByChainIDBlockNumber;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }

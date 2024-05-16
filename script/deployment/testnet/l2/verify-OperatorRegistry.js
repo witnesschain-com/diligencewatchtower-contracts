@@ -49,7 +49,7 @@ function verifyAsProxy(hre, contractName) {
                     //const contractAddressProxy = await getContractAddress(chainID, networkName, contractName);
                     // Сhecking the correctness of the address
 
-                    if (!hre.ethers.isAddress("0x638FedA84e80B217fa34cFdF4de0864eB1fa093E")) {
+                    if (!hre.ethers.isAddress("0x26710e60A36Ace8A44e1C3D7B33dc8B80eAb6cb7")) {
                       throw new Error(`Error invalid contract proxy address ${contractAddressProxy}`);
                     } 
                     console.log("Verifying contract ${contractName} with address proxy ${contractAddressProxy} on ${hre.network.name} network");
@@ -58,8 +58,8 @@ function verifyAsProxy(hre, contractName) {
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, hre.run("verify:verify", {
-                            address: "0x638FedA84e80B217fa34cFdF4de0864eB1fa093E",
-                            constructorArguments: [],
+                            address: "0x26710e60A36Ace8A44e1C3D7B33dc8B80eAb6cb7",
+                            //constructorArguments: ["0xA44151489861Fe9e3055d95adC98FbD462B948e7","0xcAe751b75833ef09627549868A04E32679386e7C"],
                         })];
                 case 2:
                     _a.sent();
@@ -77,4 +77,4 @@ function verifyAsProxy(hre, contractName) {
 const hre = require("hardhat");
 exports.verifyAsProxy = verifyAsProxy;
 verifyAsProxy(hre,"OperatorRegistry");
-// npx hardhat run script/deployment/testnet/l2/verify-OperatorRegistry.js --network witnesschain-testnet
+// npx hardhat run script/deployment/testnet/l2/verify-OperatorRegistry.js --network blue-orangutan
