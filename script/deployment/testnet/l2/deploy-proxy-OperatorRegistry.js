@@ -1,8 +1,8 @@
-// npx hardhat run script/deployment/testnet/l2/deploy-proxy-OperatorRegistry.js --network witnesschain-testnet       
+// npx hardhat run script/deployment/testnet/l2/deploy-proxy-OperatorRegistry.js --network blue-orangutan      
 const { ethers, upgrades } = require("hardhat");
 const fs = require('fs');
 
-var CONTRACT_ADDR_CONFIG = require('./../input/17000/addresses_input.json');
+var CONTRACT_ADDR_CONFIG = require('./../input/1237146866/addresses_input.json');
 
 async function main() {
   const operatorRegistryImplementation = await ethers.getContractFactory("OperatorRegistry");

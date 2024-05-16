@@ -1,6 +1,6 @@
 // npx hardhat run script/deployment/testnet/l2/deploy-proxy-DiligenceProofManager.js --network witnesschain-testnet                     
 const { ethers, upgrades } = require("hardhat");
-var CONTRACT_ADDR_CONFIG = require('./../output/250628747/deployment_output.json');
+var CONTRACT_ADDR_CONFIG = require('./../output/1237146866/deployment_output.json');
 
 async function main() {
   const DPMInstance = await ethers.getContractFactory("DiligenceProofManager");

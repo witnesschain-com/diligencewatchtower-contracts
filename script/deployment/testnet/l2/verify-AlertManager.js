@@ -49,7 +49,7 @@ function verifyAsProxy(hre, contractName) {
                     //const contractAddressProxy = await getContractAddress(chainID, networkName, contractName);
                     // Сhecking the correctness of the address
 
-                    if (!hre.ethers.isAddress("0x7AB3b14F3177935d4539d80289906633615393F2")) {
+                    if (!hre.ethers.isAddress("0xF9696529cB591E0EA9f08BBB5908Ae4a342a1F14")) {
                       throw new Error(`Error invalid contract proxy address ${contractAddressProxy}`);
                     } 
                     console.log("Verifying contract ${contractName} with address proxy ${contractAddressProxy} on ${hre.network.name} network");
@@ -58,8 +58,8 @@ function verifyAsProxy(hre, contractName) {
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, hre.run("verify:verify", {
-                            address: "0x7AB3b14F3177935d4539d80289906633615393F2",
-                            //constructorArguments: ["0xd78001BB9B70E8bFF27800fc1d877b4D29459C13","0x11dbfa16074d1D3485e66800c321cf31ABacbEb3"],
+                            address: "0xF9696529cB591E0EA9f08BBB5908Ae4a342a1F14",
+                            //constructorArguments: ["0xA44151489861Fe9e3055d95adC98FbD462B948e7","0xcAe751b75833ef09627549868A04E32679386e7C"],
                         })];
                 case 2:
                     _a.sent();
@@ -76,5 +76,5 @@ function verifyAsProxy(hre, contractName) {
 }
 const hre = require("hardhat");
 exports.verifyAsProxy = verifyAsProxy;
-verifyAsProxy(hre,"DiligenceProofManager");
-// npx hardhat run script/deployment/testnet/l2/verify-DiligenceProofManager.js --network blue-orangutan
+verifyAsProxy(hre,"AlertManager");
+// npx hardhat run script/deployment/testnet/l2/verify-AlertManager.js --network blue-orangutan

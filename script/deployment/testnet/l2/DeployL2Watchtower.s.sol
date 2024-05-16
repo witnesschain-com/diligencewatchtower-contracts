@@ -19,7 +19,7 @@ import {IAVSDirectory} from "eigenlayer-contracts/src/contracts/interfaces/IAVSD
  * To deploy and verify DeployWatchtower contracts on L2
  *  ETHERSCAN_API_KEY should be blank
  *  VERIFIER_URL should be set to the blockscout verifier url
- *  forge script ./script/deployment/DeployL2Watchtower.s.sol:DeployL2Watchtower --rpc-url $RPC_URL \ 
+ *  forge script ./script/deployment/testnet/l2/DeployL2Watchtower.s.sol:DeployL2Watchtower --rpc-url $RPC_URL \ 
  *        --private-key $PRIVATE_KEY --broadcast --verify --verifier-url $VERIFIER_URL \ 
  *        --etherscan-api-key $ETHERSCAN_API_KEY --legacy
  */
