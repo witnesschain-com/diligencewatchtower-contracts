@@ -9,6 +9,8 @@ import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/Ownabl
 import {Initializable} from "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin-upgrades/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./../libraries/EIP1271SignatureUtils.sol";
+
 
 /**
  * @title A Registry-type contract for keeping track of operators.
@@ -74,10 +76,11 @@ contract OperatorRegistry is
         bytes32 _registrationHash,
         bytes memory _signatureOfRegistrationHash
     ) internal pure {
-        // recover signer from ethSignedMessageHash and signature of the Registration Struct
-        address signer = _registrationHash.recover(_signatureOfRegistrationHash);
-
-        require(signer == _watchtower, "WitnessHub: Registration signer is not the watchtower");
+           EIP1271SignatureUtils.checkSignature_EIP1271(
+            _watchtower,
+            _registrationHash,
+            _signatureOfRegistrationHash 
+          );
     }
 
     /**
