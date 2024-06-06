@@ -365,14 +365,17 @@ contract OperatorRegistryTest is Test {
         operatorRegistry.addToOperatorWhitelist(operatorsList);
         operatorRegistry.addToOperatorWhitelist(smartWalletOperatorList);
         vm.stopPrank();
+        
+        uint256 watchtower_pk =  watchTowersListPrivateKey[0];
+        address watchtower_pubk =  vm.addr(watchTowersListPrivateKey[0]);
 
-        vm.startPrank(operatorRegistry.owner());
+        vm.startPrank(watchtower_pubk);
         uint256 expiry = block.number+100000000000;
         (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],SAMPLE_SC_REGISTRATION_PROXY,expiry);
-        sampleSmartWalletOperatorRegistration.registerWatchtowerAsOperator(vm.addr(watchTowersListPrivateKey[0]),expiry, signedMessage);
-        bool testDeReg = operatorRegistry.isValidWatchtower(operatorRegistry.owner());
-        assertEq(testDeReg, false);
+            = signMessage(watchtower_pk,SAMPLE_SC_REGISTRATION_PROXY,expiry);
+        sampleSmartWalletOperatorRegistration.registerWatchtowerAsOperator(watchtower_pubk,expiry, signedMessage);
+        bool testDeReg = operatorRegistry.isValidWatchtower(watchtower_pubk);
+        assertEq(testDeReg, true);
         vm.stopPrank();
     }
 }
