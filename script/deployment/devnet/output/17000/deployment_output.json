@@ -1,0 +1,13 @@
+{
+  "addresses": {
+    "AlertManager": "0x4aDbbA6571E9d331E713937b0dA9E2e91F4CF540",
+    "AlertManagerProxy": "0x93fb6Eb8b938F442942eB9bAC95f4B91f74B427d",
+    "DiligenceProofManager": "0x040A8851b287b0cD9EBAf2cb78B61260d36D37FF",
+    "DiligenceProofManagerProxy": "0x8FA10c2c4C57CC96D3047A648e979f6c5f607459",
+    "OperatorRegistry": "0xAeab9463725BbAD4Fdb887393F6749cE905513cb",
+    "OperatorRegistryProxy": "0x92aea03Df825C2fF8E42c10f4a49F20629B875DD",
+    "WitnessHub": "0xb5f9E7FA70d81A0f28aF876664Da7e75c67f1d47",
+    "WitnessHubProxy": "0xf310275A4c559dDb9E7c3582A206e87E3675744f",
+    "l2ChainMapping": "0xB15c1A3410a25CA6F5C5690c54A1968fD8B646aB"
+  }
+}

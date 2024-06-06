@@ -9,6 +9,7 @@ import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/Ownabl
 import {Initializable} from "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin-upgrades/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 
 /**
  * @title A Registry-type contract for keeping track of operators.
@@ -180,7 +181,15 @@ contract OperatorRegistry is
 
         // validate the watchtower's signature to the registration
         bytes32 registrationStructHash = calculateWatchtowerRegistrationMessageHash(msg.sender, expiry);
-        _validateWatchtowerRegistrationSignature(watchtower, registrationStructHash, signedMessage);
+        
+        //_validateWatchtowerRegistrationSignature(watchtower, registrationStructHash, signedMessage);
+    
+        bool isValidSignature = SignatureChecker.isValidSignatureNow(watchtower, registrationStructHash, signedMessage);
+
+        require(
+                isValidSignature,
+                "OperatorRegistry.registerWatchtowerAsOperator: Invalid Signature"
+        );
 
         _register(watchtower);
     }

@@ -8,6 +8,8 @@ import "forge-std/Script.sol";
 import "forge-std/console.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
+import {SampleSmartWalletOperatorRegistration} from "./SampleSmartWalletOperatorRegistration.sol";
+
 /**
  * Setup the following variables before you run the tests
  * 
@@ -38,12 +40,17 @@ contract OperatorRegistryTest is Test {
 
     OperatorRegistry public operatorRegistry;
 
+    SampleSmartWalletOperatorRegistration sampleSmartWalletOperatorRegistration;
+
+    address SAMPLE_SC_REGISTRATION_PROXY;
+
     uint256 deployerPrivateKey;
 
     address[] operatorsList = new address[](2);
     uint256[] operatorsListPrivateKey = new uint256[](2);
     address[] watchtowersList = new address[](2);
     uint256[] watchTowersListPrivateKey = new uint256[](2);
+    address[] smartWalletOperatorList = new address[](2);
     
 
     function signMessage (uint256 signerPrivateKey, address _addr, uint256 expiry) pure internal returns (bytes memory, bytes32, bytes memory )  {
@@ -55,11 +62,25 @@ contract OperatorRegistryTest is Test {
         return (message, messageHash,signature);
     }
 
+    function readTestOutput(string memory outputFileName) internal view returns (string memory) {
+        string memory chainEnv = vm.envString("CHAIN_ENV");
+        string memory inputDir = string.concat(
+            vm.projectRoot(),
+            "/test/",
+            chainEnv,
+            "/output/"
+        );
+        string memory chainDir = string.concat(vm.toString(block.chainid), "/");
+        string memory file = string.concat(outputFileName, ".json");
+        return vm.readFile(string.concat(inputDir, chainDir, file));
+    }
+
     function setUp() public {
 
         deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
         string memory configData = readOutput("deployment_output");
+        string memory configTestData = readTestOutput("addresses_output");
 
         address OPERATOR_REGISTRY_PROXY = stdJson.readAddress(configData, ".addresses.OperatorRegistryProxy");
 
@@ -77,10 +98,17 @@ contract OperatorRegistryTest is Test {
         watchTowersListPrivateKey[0] = 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a;
         watchTowersListPrivateKey[1] = 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba;
 
+
+        SAMPLE_SC_REGISTRATION_PROXY = stdJson.readAddress(configTestData, ".addresses.SampleSmartWalletRegistrationProxy");
+
+
+        sampleSmartWalletOperatorRegistration = SampleSmartWalletOperatorRegistration(SAMPLE_SC_REGISTRATION_PROXY);
+
         // Get a list of operator addresses
         for (uint256 i = 0; i < 2; i++) {
             operatorsList[i] = vm.addr(operatorsListPrivateKey[i]);
             watchtowersList[i] = vm.addr(watchTowersListPrivateKey[i]);
+            smartWalletOperatorList[i] = SAMPLE_SC_REGISTRATION_PROXY;
         }
 
         // Enable checking if operator is registered for delegation with EigenLayer
@@ -326,6 +354,25 @@ contract OperatorRegistryTest is Test {
         bool valid = operatorRegistry.checkIsDelegatedOperator();
         assertEq(valid,false);
         operatorRegistry.enableCheckIsDelegatedOperator();
+        vm.stopPrank();
+    }
+
+    // Pass check
+    // Test successful registration of a operator-Smart Contract wallet
+
+    function testRegisterSmartContractPass() public {
+        vm.startPrank(operatorRegistry.owner());
+        operatorRegistry.addToOperatorWhitelist(operatorsList);
+        operatorRegistry.addToOperatorWhitelist(smartWalletOperatorList);
+        vm.stopPrank();
+
+        vm.startPrank(operatorRegistry.owner());
+        uint256 expiry = block.number+100000000000;
+        (,, bytes memory signedMessage) 
+            = signMessage(watchTowersListPrivateKey[0],SAMPLE_SC_REGISTRATION_PROXY,expiry);
+        sampleSmartWalletOperatorRegistration.registerWatchtowerAsOperator(vm.addr(watchTowersListPrivateKey[0]),expiry, signedMessage);
+        bool testDeReg = operatorRegistry.isValidWatchtower(operatorRegistry.owner());
+        assertEq(testDeReg, false);
         vm.stopPrank();
     }
 }
