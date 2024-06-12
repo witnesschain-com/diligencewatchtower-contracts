@@ -2,6 +2,9 @@
     "addresses": {
       "OperatorRegistry": "0xF146Ec17Fae59B597cfC957E0cc7046D10d6f924",
       "OperatorRegistryProxy": "0xd11e55b821aC8509D2C17f5f76193351252d69aE",
-      "l2ChainMapping": "0xa72088bE957BC499C0DC51eAbBc7742De2D1DEDc"
+      "l2ChainMapping": "0xa72088bE957BC499C0DC51eAbBc7742De2D1DEDc",
+      "DiligenceProofManager": "0x63b27c8e6dd823C4eD3855B5056CD82B5AFe5cC2",
+      "DiligenceProofManagerProxy": "0x0384E6249E2aF51E58662eBCf70E0C28482C73d4"
+
     }
   }
