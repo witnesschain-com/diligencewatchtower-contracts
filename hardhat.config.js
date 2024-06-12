@@ -57,13 +57,19 @@ module.exports = {
       url: "https://blue-orangutan-rpc.eu-north-2.gateway.fm",
       chainId: 1237146866,
       accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+    "l2-mainnet": {
+      url: "https://rpc.witnesschain.com",
+      chainId: 1702448187,
+      accounts: [`${process.env.PRIVATE_KEY}`],
     }
   },
   etherscan: {
     apiKey: {
       "witnesschain-testnet": process.env.ETHERSCAN_API_KEY,
       "witnesschain-op": process.env.ETHERSCAN_API_KEY,
-      "blue-orangutan": process.env.ETHERSCAN_API_KEY
+      "blue-orangutan": process.env.ETHERSCAN_API_KEY,
+      "l2-mainnet": process.env.ETHERSCAN_API_KEY
     },
     customChains: [
       {
@@ -80,6 +86,14 @@ module.exports = {
         urls: {
           apiURL: "https://blue-orangutan-blockscout.eu-north-2.gateway.fm/api/",
           browserURL: "https://blue-orangutan-blockscout.eu-north-2.gateway.fm",
+        },
+      },
+      {
+        network: "l2-mainnet",
+        chainId: 1702448187,
+        urls: {
+          apiURL: "https://explorer.witnesschain.com/api/",
+          browserURL: "https://explorer.witnesschain.com",
         },
       }
     ],
