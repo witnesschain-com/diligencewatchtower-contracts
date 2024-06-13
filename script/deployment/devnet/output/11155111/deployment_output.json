@@ -1,13 +1,13 @@
 {
   "addresses": {
-    "AlertManager": "0xa70456Fb764c3430e7C7e4753EecD42EaA588F8C",
-    "AlertManagerProxy": "0xd7776bfEB1241c426d07B115743d92bE0924dc40",
-    "DiligenceProofManager": "0x43a6852E39E5287C5716e1E65A1cB2176DB5A2A4",
-    "DiligenceProofManagerProxy": "0xd24aEB4bd69EA60626DbB70612C3D955401257D9",
-    "OperatorRegistry": "0x2702bF5D24C99966F0F25cf65984257374955925",
-    "OperatorRegistryProxy": "0x322939dE734388F8112c7CF59aD4B6eaA2752678",
-    "WitnessHub": "0xeA2446f72F039478594d6476C851Cff816FdfDd1",
-    "WitnessHubProxy": "0xA5c6e75B227ECe311EAb284656FD3dfbFE3B4392",
-    "l2ChainMapping": "0x8C44dec3A964A65b74f9130fE3530172b712c6B9"
+    "AlertManager": "0x36463fDCe54F387826e6818C0d6bca68975badDa",
+    "AlertManagerProxy": "0x817044670050De368272593b2a08C0c17FCb6683",
+    "DiligenceProofManager": "0x3FC6556Ec31db7b135f65677dc2138137D67F84a",
+    "DiligenceProofManagerProxy": "0x9A01a560D712D8e31E2457A9E18b33847F3468d1",
+    "OperatorRegistry": "0xf2E94D2A3A224761094756ca3d0ACB072AAd2f91",
+    "OperatorRegistryProxy": "0x4B9f4E78410C2F4d7171f64735EeC024820f820b",
+    "WitnessHub": "0x297282Bd66c1e5fc21C5F7B6E3f760fc5861ddA7",
+    "WitnessHubProxy": "0xe8729cD528dDef9953c5B5fA66273e99c928E287",
+    "l2ChainMapping": "0x38a3fE469b42D3e1936ceC97fcb092b38412966e"
   }
 }

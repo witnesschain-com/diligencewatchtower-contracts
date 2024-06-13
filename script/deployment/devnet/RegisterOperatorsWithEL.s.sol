@@ -87,7 +87,7 @@ contract RegisterOperatorsWithEL is Script {
           vm.startBroadcast(operatorsListPrivateKey[i]);
           registerOperatorWithEigenlayer(delegationManagerAddr,operatorsListPrivateKey[i], vm.addr(operatorsListPrivateKey[i]));
           vm.stopBroadcast();
-  } 
+  }
 
 }
 }
