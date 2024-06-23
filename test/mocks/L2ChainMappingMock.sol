@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-import { L2OutputOracle } from "@optimism/packages/contracts-bedrock/contracts/L1/L2OutputOracle.sol";
+//import { L2OutputOracle } from "@optimism/packages/contracts-bedrock/contracts/L1/L2OutputOracle.sol";
 import { Test, console2 } from "forge-std/Test.sol";
 import { IL2ChainMapping } from "./../../src/interfaces/IL2ChainMapping.sol";
 
@@ -68,7 +68,8 @@ contract L2ChainMappingMock is  IL2ChainMapping, Test {
      * @param _chainID The chain ID to get the latest block number for.
      * @return The latest block number.
      */
-    function getLatestBlockNumber(uint256 _chainID) public view returns(uint256) {
+    function getLatestBlockNumber(uint256 _chainID) public pure returns(uint256) {
+        /**
         if (_chainID == 10) {               // 10 ChainID is Optimism Mainnet
             return L2OutputOracle(MainnetL2OOAddressOptimism).latestBlockNumber() + MAINNET_OPTIMISM_BLOCKS;
         } else if (_chainID == 8453) {      // 8453 ChainID is Base Mainnet
@@ -85,5 +86,7 @@ contract L2ChainMappingMock is  IL2ChainMapping, Test {
             // This should not happen due to the isValidChainID check.
             revert("Unexpected error");
         }
+         */
+        revert("L2ChainMappingMock.getLatestBlockNumber: Deprecated");
     }
 }

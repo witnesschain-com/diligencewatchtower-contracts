@@ -14,3 +14,4 @@ artifacts/
 verify-or.ts
 typechain-types/
 src/.DS_Store
+archive/
