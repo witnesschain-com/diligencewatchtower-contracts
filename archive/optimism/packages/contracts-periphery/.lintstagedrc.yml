@@ -1,0 +1,4 @@
+"*.{ts,js}":
+  - eslint
+"*.sol":
+  - pnpm solhint -f table

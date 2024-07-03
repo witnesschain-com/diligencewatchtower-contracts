@@ -197,6 +197,26 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
     }
 
+    // Pass check
+    // Test successful registration of an operator-watchtower
+    function testRegisterFailUseSameSalt() public {
+        vm.startPrank(operatorRegistry.owner());
+        operatorRegistry.addToOperatorWhitelist(operatorsList);
+        vm.stopPrank();
+
+        vm.startPrank(operatorsList[0]);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
+        operatorRegistry.deRegister(watchtowersList[0]);
+        vm.expectRevert(bytes("WitnessHub.registerWatchtowerAsOperator: Watchtower salt should not be already used"));
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
+        vm.stopPrank();
+    }
+
     // Fail check
     // Test successful registration of an operator-watchtower with an expired block
     function testRegisterExpiredFail() public {
@@ -206,7 +226,7 @@ contract OperatorRegistryTest is Test {
 
         vm.startPrank(operatorsList[0]);
         bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
-        uint256 expiry = block.number - 1;
+        uint256 expiry = block.number -1;
         bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
         vm.expectRevert(bytes("WitnessHub: watchtower signature expired"));
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
@@ -219,12 +239,12 @@ contract OperatorRegistryTest is Test {
     function testRegisterOperatorAddressNotWhitelisted() public {
         address notWhitelistedAddress = address(12345);
         vm.startPrank(notWhitelistedAddress);
-        vm.expectRevert(bytes("WitnessHub: Operator is not whitelisted with Witness Chain AVS"));
         bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
         uint256 expiry = block.number + 100000000000;
         bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
         bytes memory signature = abi.encodePacked(r, s, v);
+        vm.expectRevert(bytes("WitnessHub: Operator is not whitelisted with Witness Chain AVS"));
         operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }
@@ -234,18 +254,17 @@ contract OperatorRegistryTest is Test {
     function testRegisterOperatorAddressNotRegisteredWithEigenLayer() public {
         address[] memory addressList = new address[](1);
         addressList[0] = address(12345);
-
         vm.startPrank(operatorRegistry.owner());
         operatorRegistry.addToOperatorWhitelist(addressList);
         vm.stopPrank();
 
         vm.startPrank(addressList[0]);
-        vm.expectRevert(bytes("WitnessHub: You need to be a delegated operator with EigenLayer"));
         bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
         uint256 expiry = block.number + 100000000000;
         bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
         bytes memory signature = abi.encodePacked(r, s, v);
+        vm.expectRevert(bytes("WitnessHub: You need to be a delegated operator with EigenLayer"));
         operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }

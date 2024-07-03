@@ -41,13 +41,14 @@ endif
 deploy-watchtower-avs-smart_contracts:
 	@if [ "$(DEPLOYMENT)" = "local" ]; then \
 		forge script ./script/deployment/$(CHAIN_ENV)/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $(RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --chain-id $(CHAIN_ID); \
+		forge script ./test/DeploySampleSmartWalletOperatorRegistration.s.sol:DeploySampleSmartWalletOperatorRegistration --rpc-url $(RPC_URL) --private-key $(PRIVATE_KEY)  --broadcast --chain-id $(CHAIN_ID); \
 	else \
 		forge script ./script/deployment/$(CHAIN_ENV)/DeployWatchtower.s.sol:DeployWatchtower --rpc-url $(RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --verifier-url https://api.etherscan.io/api\? --etherscan-api-key $ETHERSCAN_API_KEY ; \
 	fi
 
 register-operators-with-eigenlayer:
-	echo $(RPC_URL)
 	@forge script ./script/deployment/$(CHAIN_ENV)/RegisterOperatorsWithEL.s.sol:RegisterOperatorsWithEL --rpc-url $(RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --chain-id $(CHAIN_ID)
+	@forge script ./script/deployment/$(CHAIN_ENV)/RegisterSmartWalletWithEL.s.sol:RegisterSmartWalletWithEL --rpc-url $(RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --chain-id $(CHAIN_ID)
 
 test: deploy-watchtower-avs-smart_contracts register-operators-with-eigenlayer
 	@forge test --rpc-url $(RPC_URL)
