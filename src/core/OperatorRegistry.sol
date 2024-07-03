@@ -27,6 +27,11 @@ contract OperatorRegistry is
 {
     using ECDSA for bytes32;
 
+    bytes32 private constant DOMAIN_TYPE_HASH =
+        keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
+    bytes32 private constant REGISTRATION_TYPE_HASH =
+        keccak256("registerWatchtowerAsOperator(address watchtower,address operator,bytes32 salt,uint256 expiry)");
+
     // operator => operator attributes
     mapping(address => Operator) public operatorDetails;
 
@@ -49,6 +54,9 @@ contract OperatorRegistry is
 
     // watchtower address => operator address
     mapping(address => address) watchtowerToOperator;
+
+    /// @notice Mapping: Watchtower => Salt => bool
+    mapping(address => mapping(bytes32 => bool)) public watchtowerSaltUsed;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -87,18 +95,25 @@ contract OperatorRegistry is
      * @param operator The account registering watchtower as an operator
      * @param expiry Time after which the watchtower's signature becomes invalid
      */
-    function calculateWatchtowerRegistrationMessageHash(address operator, uint256 expiry)
+    function calculateWatchtowerRegistrationMessageHash(address operator, bytes32 salt, uint256 expiry)
         public
-        pure
+        view
         returns (bytes32)
     {
         // calculate the struct hash
-        bytes32 structHash = keccak256(abi.encode(operator, expiry));
+        bytes32 structHash = keccak256(abi.encode(operator, salt, expiry));
 
-        // get the ethSignedMessageHash
-        bytes32 ethSignedMessageHash = structHash.toEthSignedMessageHash();
+        bytes32 digestHash = keccak256(abi.encodePacked("\x19\x01", domainSeperator(), structHash));
 
-        return ethSignedMessageHash;
+        return digestHash;
+    }
+
+    function domainSeperator() public view returns (bytes32) {
+        return _calculateDomainSeperator();
+    }
+
+    function _calculateDomainSeperator() internal view returns (bytes32) {
+        return keccak256(abi.encode(DOMAIN_TYPE_HASH, keccak256(bytes("WitnessHub")), block.chainid, address(this)));
     }
 
     /**
@@ -157,7 +172,7 @@ contract OperatorRegistry is
         emit WatchtowerRegisteredToOperator(msg.sender, _watchtowerAddress, block.number);
     }
 
-    function registerWatchtowerAsOperator(address watchtower, uint256 expiry, bytes memory signedMessage)
+    function registerWatchtowerAsOperator(address watchtower, bytes32 salt, uint256 expiry, bytes memory signedMessage)
         external
         whenNotPaused
     {
@@ -179,17 +194,22 @@ contract OperatorRegistry is
         // check if it's past expiry time already
         require(expiry >= block.timestamp, "WitnessHub: watchtower signature expired");
 
+        // check if the salt is valid (exist and not already used)
+        require(
+            !watchtowerSaltUsed[watchtower][salt],
+            "WitnessHub.registerWatchtowerAsOperator: Watchtower salt should not be already used"
+        );
+
         // validate the watchtower's signature to the registration
-        bytes32 registrationStructHash = calculateWatchtowerRegistrationMessageHash(msg.sender, expiry);
-        
+        bytes32 registrationStructHash = calculateWatchtowerRegistrationMessageHash(msg.sender, salt, expiry);
+
         //_validateWatchtowerRegistrationSignature(watchtower, registrationStructHash, signedMessage);
-    
+
         bool isValidSignature = SignatureChecker.isValidSignatureNow(watchtower, registrationStructHash, signedMessage);
 
-        require(
-                isValidSignature,
-                "OperatorRegistry.registerWatchtowerAsOperator: Invalid Signature"
-        );
+        require(isValidSignature, "OperatorRegistry.registerWatchtowerAsOperator: Invalid Signature");
+
+        watchtowerSaltUsed[watchtower][salt] = true;
 
         _register(watchtower);
     }
@@ -286,6 +306,7 @@ contract OperatorRegistry is
         slasherAddress = _slasherAddress;
     }
     /// @notice pause the contract
+
     function pause() public whenNotPaused onlyOwner {
         super._pause();
     }

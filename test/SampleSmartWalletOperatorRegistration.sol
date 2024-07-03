@@ -5,25 +5,24 @@ import {PausableUpgradeable} from "@openzeppelin-upgrades/contracts/security/Pau
 import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import {Initializable} from "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
 import {UUPSUpgradeable} from "@openzeppelin-upgrades/contracts/proxy/utils/UUPSUpgradeable.sol";
-import { IDelegationManager } from "eigenlayer-contracts/src/contracts/interfaces/IDelegationManager.sol";
+import {IDelegationManager} from "eigenlayer-contracts/src/contracts/interfaces/IDelegationManager.sol";
 import "@openzeppelin/contracts/interfaces/IERC1271.sol";
-
 
 import {IOperatorRegistry} from "./../src/interfaces/IOperatorRegistry.sol";
 
-
 /**
  * @title  Sample Smart Contract Wallet for Operator Registration
- * 
- *  
+ *
+ *
  * @author Kaleidoscope Blockchain, Inc
  */
-contract SampleSmartWalletOperatorRegistration is Initializable, 
-                                     OwnableUpgradeable, 
-                                     PausableUpgradeable, 
-                                     UUPSUpgradeable,
-                                     IERC1271 {
-
+contract SampleSmartWalletOperatorRegistration is
+    Initializable,
+    OwnableUpgradeable,
+    PausableUpgradeable,
+    UUPSUpgradeable,
+    IERC1271
+{
     IOperatorRegistry operatorRegistry;
 
     bytes4 private constant MAGICVALUE = 0x1626ba7e;
@@ -38,33 +37,29 @@ contract SampleSmartWalletOperatorRegistration is Initializable,
         __Ownable_init();
         __Pausable_init();
         __UUPSUpgradeable_init();
-    }   
-  
+    }
+
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
-    function registerOperatorWithEigenlayer(
-        address delegationManager,
-        address ECDSAAddress
-    ) public {
-            IDelegationManager.OperatorDetails memory operatorDetails = IDelegationManager.OperatorDetails({
-                earningsReceiver: ECDSAAddress,
-                delegationApprover: ECDSAAddress,
-                stakerOptOutWindowBlocks: 0
-            });
-            string memory emptyStringForMetadataURI = "testing";
-            
-            IDelegationManager(delegationManager).registerAsOperator(
-                    operatorDetails,
-                    emptyStringForMetadataURI
-                );
-            } 
+    function registerOperatorWithEigenlayer(address delegationManager, address ECDSAAddress) public {
+        IDelegationManager.OperatorDetails memory operatorDetails = IDelegationManager.OperatorDetails({
+            earningsReceiver: ECDSAAddress,
+            delegationApprover: ECDSAAddress,
+            stakerOptOutWindowBlocks: 0
+        });
+        string memory emptyStringForMetadataURI = "testing";
+
+        IDelegationManager(delegationManager).registerAsOperator(operatorDetails, emptyStringForMetadataURI);
+    }
 
     function registerWatchtowerAsOperator(
-                            address watchtower,
-                            uint256 expiry, 
-                            bytes memory operatorSignature) external {
-        operatorRegistry.registerWatchtowerAsOperator(watchtower,expiry, operatorSignature);
-    }  
+        address watchtower,
+        bytes32 salt,
+        uint256 expiry,
+        bytes memory operatorSignature
+    ) external {
+        operatorRegistry.registerWatchtowerAsOperator(watchtower, salt, expiry, operatorSignature);
+    }
 
     function isValidSignature(bytes32 _hash, bytes memory _signature) external view override returns (bytes4) {
         // Check that the signature length is valid
@@ -97,6 +92,4 @@ contract SampleSmartWalletOperatorRegistration is Initializable,
         // Return the magic value if the signature is valid
         return signer == msg.sender ? MAGICVALUE : bytes4(0);
     }
-
-    
 }

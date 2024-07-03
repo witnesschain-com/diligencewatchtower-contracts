@@ -12,27 +12,22 @@ import {SampleSmartWalletOperatorRegistration} from "./SampleSmartWalletOperator
 
 /**
  * Setup the following variables before you run the tests
- * 
+ *
  * @dev
-   export PRIVATE_KEY=<Private Key used during DeployWatchtower.sol>
-   export CHAIN_ID=5 or the forked devnet chain
-   export AGGREGATOR=<aggregator eth address>
-   export RPC_URL=http://localhost:8545
-
+ *    export PRIVATE_KEY=<Private Key used during DeployWatchtower.sol>
+ *    export CHAIN_ID=5 or the forked devnet chain
+ *    export AGGREGATOR=<aggregator eth address>
+ *    export RPC_URL=http://localhost:8545
+ *
  * forge test --rpc-url http://127.0.0.1:8545 -vvvv
  * forge test --match-contract OperatorRegistryTest --rpc-url http://127.0.0.1:8545 -vvvv
  */
-
 contract OperatorRegistryTest is Test {
-    using ECDSA for bytes32; 
+    using ECDSA for bytes32;
+
     function readOutput(string memory outputFileName) internal view returns (string memory) {
         string memory chainEnv = vm.envString("CHAIN_ENV");
-        string memory inputDir = string.concat(
-            vm.projectRoot(),
-            "/script/deployment/",
-            chainEnv,
-            "/output/"
-        );
+        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/", chainEnv, "/output/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));
@@ -51,32 +46,29 @@ contract OperatorRegistryTest is Test {
     address[] watchtowersList = new address[](2);
     uint256[] watchTowersListPrivateKey = new uint256[](2);
     address[] smartWalletOperatorList = new address[](2);
-    
 
-    function signMessage (uint256 signerPrivateKey, address _addr, uint256 expiry) pure internal returns (bytes memory, bytes32, bytes memory )  {
-        bytes memory message = abi.encode(_addr,expiry);
+    function signMessage(uint256 signerPrivateKey, address _addr, uint256 expiry)
+        internal
+        pure
+        returns (bytes memory, bytes32, bytes memory)
+    {
+        bytes memory message = abi.encode(_addr, expiry);
         bytes32 messageHash = keccak256(message);
         bytes32 eth_signed_message = messageHash.toEthSignedMessageHash();
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerPrivateKey, eth_signed_message);
         bytes memory signature = abi.encodePacked(r, s, v);
-        return (message, messageHash,signature);
+        return (message, messageHash, signature);
     }
 
     function readTestOutput(string memory outputFileName) internal view returns (string memory) {
         string memory chainEnv = vm.envString("CHAIN_ENV");
-        string memory inputDir = string.concat(
-            vm.projectRoot(),
-            "/test/",
-            chainEnv,
-            "/output/"
-        );
+        string memory inputDir = string.concat(vm.projectRoot(), "/test/", chainEnv, "/output/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));
     }
 
     function setUp() public {
-
         deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
         string memory configData = readOutput("deployment_output");
@@ -98,9 +90,8 @@ contract OperatorRegistryTest is Test {
         watchTowersListPrivateKey[0] = 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a;
         watchTowersListPrivateKey[1] = 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba;
 
-
-        SAMPLE_SC_REGISTRATION_PROXY = stdJson.readAddress(configTestData, ".addresses.SampleSmartWalletRegistrationProxy");
-
+        SAMPLE_SC_REGISTRATION_PROXY =
+            stdJson.readAddress(configTestData, ".addresses.SampleSmartWalletRegistrationProxy");
 
         sampleSmartWalletOperatorRegistration = SampleSmartWalletOperatorRegistration(SAMPLE_SC_REGISTRATION_PROXY);
 
@@ -130,7 +121,6 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
     }
 
-
     /// @notice Following are tests for write functions
     // Fail check
     // Test if whitelisting operators as Non-owner of the contract fails correctly
@@ -140,7 +130,7 @@ contract OperatorRegistryTest is Test {
         operatorRegistry.addToOperatorWhitelist(operatorsList);
         vm.stopPrank();
     }
-    
+
     // Pass check
     // Test suspend as Owner
     function testSuspendFromOperatorWhitelistAsOwner() public {
@@ -156,6 +146,7 @@ contract OperatorRegistryTest is Test {
     }
     // Pass check
     // Test suspend as Owner for non-whitelisted operators
+
     function testSuspendWithoutOperatorWhitelistAsOwner() public {
         vm.startPrank(operatorRegistry.owner());
         vm.expectRevert(bytes("WitnessHub: Cannot suspend if operator is already suspended or not whitelisted"));
@@ -195,15 +186,16 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         //validateSigner(abi.encodePacked(operatorsList[0],expiry),signedMessage,watchtowersList[0],operatorsList[0]);
-        assertEq(operatorRegistry.isValidWatchtower(watchtowersList[0]),true);
+        assertEq(operatorRegistry.isValidWatchtower(watchtowersList[0]), true);
         vm.stopPrank();
     }
-
 
     // Fail check
     // Test successful registration of an operator-watchtower with an expired block
@@ -213,11 +205,13 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
-        uint256 expiry = block.number-1;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number - 1;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
         vm.expectRevert(bytes("WitnessHub: watchtower signature expired"));
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }
 
@@ -226,15 +220,17 @@ contract OperatorRegistryTest is Test {
         address notWhitelistedAddress = address(12345);
         vm.startPrank(notWhitelistedAddress);
         vm.expectRevert(bytes("WitnessHub: Operator is not whitelisted with Witness Chain AVS"));
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }
 
     // Fail check
-    // Test registration of non-EL operator 
+    // Test registration of non-EL operator
     function testRegisterOperatorAddressNotRegisteredWithEigenLayer() public {
         address[] memory addressList = new address[](1);
         addressList[0] = address(12345);
@@ -245,10 +241,12 @@ contract OperatorRegistryTest is Test {
 
         vm.startPrank(addressList[0]);
         vm.expectRevert(bytes("WitnessHub: You need to be a delegated operator with EigenLayer"));
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }
 
@@ -261,10 +259,12 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         bool testDeReg = operatorRegistry.isValidWatchtower(watchtowersList[0]);
         assertEq(testDeReg, true);
         vm.stopPrank();
@@ -286,10 +286,12 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         bool testDeReg = operatorRegistry.isValidWatchtower(watchtowersList[0]);
         assertEq(testDeReg, true);
         vm.stopPrank();
@@ -319,29 +321,29 @@ contract OperatorRegistryTest is Test {
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash = operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[0], salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[0], digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         bool isValid = operatorRegistry.isValidWatchtower(watchtowersList[0]);
         assertEq(isValid, true);
         vm.stopPrank();
 
         vm.startPrank(operatorsList[0]);
         vm.expectRevert(bytes("WitnessHub: Watchtower address already registered"));
-        (,, signedMessage) 
-            = signMessage(watchTowersListPrivateKey[0],operatorsList[0],expiry);
-        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], expiry, signedMessage);
+        operatorRegistry.registerWatchtowerAsOperator(watchtowersList[0], salt, expiry, signature);
         vm.stopPrank();
     }
- 
+
     // Pass check
     // Test if enableCheckIsDelegatedOperator function works
     function testEnableCheckIsDelegatedOperator() public {
         // try deregistering an operator that is not registered
         vm.startPrank(operatorRegistry.owner());
         bool valid = operatorRegistry.checkIsDelegatedOperator();
-        assertEq(valid,true);
+        assertEq(valid, true);
         vm.stopPrank();
     }
 
@@ -352,7 +354,7 @@ contract OperatorRegistryTest is Test {
         vm.startPrank(operatorRegistry.owner());
         operatorRegistry.disableCheckIsDelegatedOperator();
         bool valid = operatorRegistry.checkIsDelegatedOperator();
-        assertEq(valid,false);
+        assertEq(valid, false);
         operatorRegistry.enableCheckIsDelegatedOperator();
         vm.stopPrank();
     }
@@ -365,15 +367,18 @@ contract OperatorRegistryTest is Test {
         operatorRegistry.addToOperatorWhitelist(operatorsList);
         operatorRegistry.addToOperatorWhitelist(smartWalletOperatorList);
         vm.stopPrank();
-        
-        uint256 watchtower_pk =  watchTowersListPrivateKey[0];
-        address watchtower_pubk =  vm.addr(watchTowersListPrivateKey[0]);
+
+        uint256 watchtower_pk = watchTowersListPrivateKey[0];
+        address watchtower_pubk = vm.addr(watchTowersListPrivateKey[0]);
 
         vm.startPrank(watchtower_pubk);
-        uint256 expiry = block.number+100000000000;
-        (,, bytes memory signedMessage) 
-            = signMessage(watchtower_pk,SAMPLE_SC_REGISTRATION_PROXY,expiry);
-        sampleSmartWalletOperatorRegistration.registerWatchtowerAsOperator(watchtower_pubk,expiry, signedMessage);
+        bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+        uint256 expiry = block.number + 100000000000;
+        bytes32 digestHash =
+            operatorRegistry.calculateWatchtowerRegistrationMessageHash(SAMPLE_SC_REGISTRATION_PROXY, salt, expiry);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchtower_pk, digestHash);
+        bytes memory signature = abi.encodePacked(r, s, v);
+        sampleSmartWalletOperatorRegistration.registerWatchtowerAsOperator(watchtower_pubk, salt, expiry, signature);
         bool testDeReg = operatorRegistry.isValidWatchtower(watchtower_pubk);
         assertEq(testDeReg, true);
         vm.stopPrank();

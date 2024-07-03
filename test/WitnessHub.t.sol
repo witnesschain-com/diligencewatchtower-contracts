@@ -19,17 +19,16 @@ import {L2ChainMappingMock} from "./mocks/L2ChainMappingMock.sol";
 
 /**
  * Setup the following variables before you run the tests
- * 
+ *
  * @dev
-   export PRIVATE_KEY=<Private Key used during DeployWatchtower.sol>
-   export CHAIN_ID=5 or the forked devnet chain
-   export AGGREGATOR=<aggregator eth address>
-   export RPC_URL=http://localhost:8545
-
+ *    export PRIVATE_KEY=<Private Key used during DeployWatchtower.sol>
+ *    export CHAIN_ID=5 or the forked devnet chain
+ *    export AGGREGATOR=<aggregator eth address>
+ *    export RPC_URL=http://localhost:8545
+ *
  * forge test --rpc-url http://127.0.0.1:8545 -vvvv
  * forge test --match-contract WitnessHubTest --rpc-url http://127.0.0.1:8545 -vvvv
  */
-
 contract WitnessHubTest is Test {
     using ECDSA for bytes32;
 
@@ -81,12 +80,7 @@ contract WitnessHubTest is Test {
 
     function readOutput(string memory outputFileName) internal view returns (string memory) {
         string memory chainEnv = vm.envString("CHAIN_ENV");
-        string memory inputDir = string.concat(
-            vm.projectRoot(),
-            "/script/deployment/",
-            chainEnv,
-            "/output/"
-        );        
+        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/", chainEnv, "/output/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));
@@ -94,25 +88,25 @@ contract WitnessHubTest is Test {
 
     function readInput(string memory outputFileName) internal view returns (string memory) {
         string memory chainEnv = vm.envString("CHAIN_ENV");
-        string memory inputDir = string.concat(
-            vm.projectRoot(),
-            "/script/deployment/",
-            chainEnv,
-            "/input/"
-        );        
+        string memory inputDir = string.concat(vm.projectRoot(), "/script/deployment/", chainEnv, "/input/");
         string memory chainDir = string.concat(vm.toString(block.chainid), "/");
         string memory file = string.concat(outputFileName, ".json");
         return vm.readFile(string.concat(inputDir, chainDir, file));
     }
 
-    function signMessage (uint256 signerPrivateKey, address _addr, uint256 expiry) pure internal returns (bytes memory, bytes32, bytes memory )  {
-        bytes memory message = abi.encode(_addr,expiry);
+    function signMessage(uint256 signerPrivateKey, address _addr, uint256 expiry)
+        internal
+        pure
+        returns (bytes memory, bytes32, bytes memory)
+    {
+        bytes memory message = abi.encode(_addr, expiry);
         bytes32 messageHash = keccak256(message);
         bytes32 eth_signed_message = messageHash.toEthSignedMessageHash();
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerPrivateKey, eth_signed_message);
         bytes memory signature = abi.encodePacked(r, s, v);
-        return (message, messageHash,signature);
+        return (message, messageHash, signature);
     }
+
     function setUp() public {
         deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         //AVS_Directory = vm.envAddress("AVS_DIRECTORY");
@@ -151,7 +145,6 @@ contract WitnessHubTest is Test {
         watchTowersListPrivateKey[0] = 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a;
         watchTowersListPrivateKey[1] = 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba;
 
-
         // Get a list of operator and watchtower addresses
         for (uint256 i = 0; i < 2; i++) {
             operatorsList[i] = vm.addr(operatorsListPrivateKey[i]);
@@ -166,10 +159,14 @@ contract WitnessHubTest is Test {
         // Simulate registering of individual watchtowers
         for (uint256 i = 0; i < 2; i++) {
             vm.startPrank(operatorsList[i]);
-            uint256 expiry = block.number+100000000000;
-            (,, bytes memory signedMessage) 
-                = signMessage(watchTowersListPrivateKey[i],operatorsList[i],expiry);
-            operatorRegistry.registerWatchtowerAsOperator(watchtowersList[i], expiry, signedMessage);
+            bytes32 salt = keccak256(abi.encodePacked("Unique_salt"));
+            uint256 expiry = block.number + 100000000000;
+            bytes32 digestHash =
+                operatorRegistry.calculateWatchtowerRegistrationMessageHash(operatorsList[i], salt, expiry);
+            (uint8 v, bytes32 r, bytes32 s) = vm.sign(watchTowersListPrivateKey[i], digestHash);
+            bytes memory signature = abi.encodePacked(r, s, v);
+
+            operatorRegistry.registerWatchtowerAsOperator(watchtowersList[i], salt, expiry, signature);
             vm.stopPrank();
         }
     }
@@ -182,8 +179,6 @@ contract WitnessHubTest is Test {
      * @notice internal function for calculating a signature from the operator corresponding to `_operatorPrivateKey`, delegating them to
      * the `operator`, and expiring at `expiry`.
      */
-
-
     function _getOperatorSignature(
         uint256 _operatorPrivateKey,
         address operator,
@@ -488,17 +483,17 @@ contract WitnessHubTest is Test {
         vm.startPrank(vm.addr(deployerPrivateKey));
         witnessHub.setStrategyParams(params);
         address[] memory strategies = witnessHub.getRestakeableStrategies();
-        assertEq(strategies.length,1);
+        assertEq(strategies.length, 1);
         params.push(strat1);
-         witnessHub.setStrategyParams(params);
+        witnessHub.setStrategyParams(params);
         strategies = witnessHub.getRestakeableStrategies();
-        assertEq(strategies.length,2);  
+        assertEq(strategies.length, 2);
         params.pop();
         params.pop();
         params.push(strat1);
         witnessHub.setStrategyParams(params);
         strategies = witnessHub.getRestakeableStrategies();
-        assertEq(strategies.length,1);  
+        assertEq(strategies.length, 1);
         vm.stopPrank();
     }
 }
