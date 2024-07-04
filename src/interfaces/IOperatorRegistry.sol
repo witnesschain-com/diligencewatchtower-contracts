@@ -30,7 +30,7 @@ interface IOperatorRegistry {
     /// @notice Emitted once an operator has been whitelisted
     event OperatorsWhiteListed(address[] operator, uint256 blockNumber);
 
-    function calculateWatchtowerRegistrationMessageHash(address operator, uint256 expiry)
+    function calculateWatchtowerRegistrationMessageHash(address operator, bytes32 salt, uint256 expiry)
         external
         view
         returns (bytes32);
@@ -40,7 +40,8 @@ interface IOperatorRegistry {
 
     /// @notice Registers a watchtower to an operator. There can be multiple
     /// watchtowers registered under an operator.
-    function registerWatchtowerAsOperator(address watchtower, uint256 expiry, bytes memory signedMessage) external;
+    function registerWatchtowerAsOperator(address watchtower, bytes32 salt, uint256 expiry, bytes memory signedMessage)
+        external;
 
     /**
      * @notice Deregisters the watchtower from the operator's watchtower list.
