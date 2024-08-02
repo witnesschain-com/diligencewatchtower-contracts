@@ -4,15 +4,13 @@ pragma solidity ^0.8.15;
 import { OperatorRegistry } from "../../../../src/core/OperatorRegistry.sol";
 import { Script, console, stdJson } from "forge-std/Script.sol";
 import { L2ChainMapping } from "../../../../src/core/L2ChainMapping.sol";
-import {UUPSUpgradeable} from "@openzeppelin-upgrades/contracts/proxy/utils/UUPSUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin-upgrades/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 /**
-* For testnet holesky,
-* forge script ./script/deployment/testnet/l1/UpgradeOperatorRegistryImplementation.s.sol:UpgradeOperatorRegistryImplementation --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY
 * For testnet blue orangutan,
-* forge script ./script/deployment/testnet/l2/UpgradeOperatorRegistryImplementation.s.sol:UpgradeOperatorRegistryImplementation --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --verifier-url $VERIFIER_URL_L2 --etherscan-api-key $ETHERSCAN_API_KEY
-* For mainnet,
-* forge script ./script/deployment/testnet/l1/UpgradeOperatorRegistryImplementation.s.sol:UpgradeOperatorRegistryImplementation --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --verifier-url https://api.etherscan.io/api\? --etherscan-api-key $ETHERSCAN_API_KEY
+* forge script ./script/deployment/testnet/l2/UpgradeOperatorRegistryImplementation.s.sol:UpgradeOperatorRegistryImplementation --rpc-url $RPC_URL_L2 --private-key $PRIVATE_KEY --broadcast --verify --verifier blockscout --verifier-url $VERIFIER_URL_L2 --legacy
+* For mainnet
+* forge script ./script/deployment/testnet/l1/UpgradeOperatorRegistryImplementation.s.sol:UpgradeOperatorRegistryImplementation --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --verifier-url https://api.etherscan.io/api\? --etherscan-api-key $ETHERSCAN_API_KEY --legacy
 */
 
 contract UpgradeOperatorRegistryImplementation is Script {
