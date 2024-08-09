@@ -1,0 +1,11 @@
+{
+  "addresses": {
+    "AlertManager": "0xFF1F6c0d2afcb4A22e52FeA08D5A7cc0a1c49376",
+    "AlertManagerProxy": "0xD1b991530D07f03226b0192E0161E1142d3552eE",
+    "OperatorRegistry": "0x97C1799626d55Eb54A92FA2b4D1Ec718a99856ba",
+    "OperatorRegistryProxy": "0xef1a89841fd189ba28e780a977ca70eb1a5e985d",
+    "WitnessHub": "0xe1f108d5d2337987f818e8b2e61d2e0e36cbf7bd",
+    "WitnessHubProxy": "0xd25c2c5802198cb8541987b73a8db4c9bcae5cc7",
+    "l2ChainMapping": "0x20b8aE105526182fF18d4b4934D340dd061c52A4"
+  }
+}

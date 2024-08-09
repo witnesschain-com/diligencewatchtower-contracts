@@ -55,6 +55,7 @@ contract DiligenceProofManager is
     // range of blocks for chain id for which to aggregate bounties
     mapping(uint256 => uint256) private chainIDRange;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
