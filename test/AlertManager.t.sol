@@ -66,12 +66,12 @@ contract AlertManagerTest is Test {
         alertManager = AlertManager(ALERT_MANAGER_PROXY);
 
         // Test Operators in EL Goerli Anvil
-        operatorsListPrivateKey[0] = 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97;
-        operatorsListPrivateKey[1] = 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6;
+        operatorsListPrivateKey[0] = "";
+        operatorsListPrivateKey[1] = "";
 
         // Test dummy Watchtowers
-        watchtowersListPrivateKey[0] = 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356;
-        watchtowersListPrivateKey[1] = 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba;
+        watchtowersListPrivateKey[0] = "";
+        watchtowersListPrivateKey[1] = "";
 
         // Get a list of operator and watchtower addresses
         for (uint256 i = 0; i < 2; i++) {

@@ -16,3 +16,11 @@ typechain-types/
 src/.DS_Store
 
 archive/*
+script/deployment/devnet/*
+script/deployment/testnet/input/*
+script/deployment/testnet/l1/*
+script/deployment/testnet/l2/*
+script/deployment/mainnet/l1/*
+script/deployment/mainnet/l2/*
+script/deployment/mainnet/input/*
+backups/*
